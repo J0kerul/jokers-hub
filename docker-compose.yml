@@ -1,0 +1,18 @@
+services:
+  db:
+    image: postgres:16
+    container_name: jokers-hub-postgres
+    restart: always
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=securepassword
+      - POSTGRES_DB=mylifeosdb
+
+volumes:
+  pgdata:
+    driver: local
+    name: jokers-hub-postgres-data
