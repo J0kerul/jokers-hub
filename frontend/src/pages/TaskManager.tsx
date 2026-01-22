@@ -268,7 +268,7 @@ function TaskManager() {
   return (
     <div className="min-h-screen bg-background p-6">
       {/* Header */}
-      <TaskManagerHeader />
+      <TaskManagerHeader tasks={tasks} />
 
       {/* 3 BOXEN NEBENEINANDER - weniger links, mehr rechts */}
       <div className="grid grid-cols-[240px_1fr_380px] gap-0 h-[calc(100vh-12rem)] pl-32 pr-32">

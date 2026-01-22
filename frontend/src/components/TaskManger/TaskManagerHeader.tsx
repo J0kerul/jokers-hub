@@ -1,24 +1,46 @@
 import { Menu } from "lucide-react";
+import type { Task } from "@/types";
 
-export function TaskManagerHeader() {
+type TaskManagerHeaderProps = {
+  tasks: Task[];
+};
+
+export function TaskManagerHeader({ tasks }: TaskManagerHeaderProps) {
+  // Berechne Tasks mit Deadline heute
+  const today = new Date("2026-01-22"); // Dein Mock-Datum
+  today.setHours(0, 0, 0, 0);
+
+  const todaysTasks = tasks.filter((task) => {
+    if (!task.deadline || task.completed) return false;
+
+    const taskDate = new Date(task.deadline);
+    taskDate.setHours(0, 0, 0, 0);
+
+    return taskDate.getTime() === today.getTime();
+  }).length;
+
   return (
-    <div className="flex items-center justify-between mb-6 pb-4 border-b border-border">
-      {/* Left: Burger Menu */}
+    <div className="flex items-start gap-4 mb-6 pl-32 pr-32">
+      {/* Burger Button - absolut positioniert links außen */}
       <button
         onClick={() => {
           // TODO: Open sidebar
           console.log("Open sidebar");
         }}
-        className="p-2 hover:bg-muted rounded-md transition-colors"
+        className="p-2 hover:bg-muted rounded-md transition-colors absolute left-6"
       >
         <Menu className="w-6 h-6" />
       </button>
 
-      {/* Center: Title */}
-      <h1 className="text-2xl font-bold">Task Manager</h1>
+      {/* Title + Tasks Count + Border - volle Breite des Grids */}
+      <div className="flex-1 flex items-center justify-between pb-4 border-b border-border">
+        <h1 className="text-2xl font-bold">Task Manager</h1>
 
-      {/* Right: Placeholder */}
-      <div className="w-10" />
+        <div className="text-lg text-muted-foreground">
+          <span className="font-semibold text-foreground">{todaysTasks}</span>{" "}
+          tasks due today
+        </div>
+      </div>
     </div>
   );
 }
