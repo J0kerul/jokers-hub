@@ -1,9 +1,9 @@
+// src/services/taskService.ts
 import type { Task } from "@/types";
 import { taskMapper, type ApiTask } from "./taskMapper";
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8080/api";
 
-// Request Types
 export type CreateTaskRequest = Omit<Task, "id" | "createdAt" | "updatedAt">;
 export type UpdateTaskRequest = Partial<Omit<Task, "id" | "createdAt" | "updatedAt">>;
 
@@ -32,6 +32,12 @@ class TaskService {
   async getAllTasks(): Promise<Task[]> {
     const apiTasks = await this.fetch<ApiTask[]>("/tasks");
     return apiTasks.map(taskMapper.toFrontend);
+  }
+
+  // GET /tasks/:id - Einzelnen Task holen
+  async getTaskById(id: string): Promise<Task> {
+    const apiTask = await this.fetch<ApiTask>(`/tasks/${id}`);
+    return taskMapper.toFrontend(apiTask);
   }
 
   // POST /tasks - Task erstellen
