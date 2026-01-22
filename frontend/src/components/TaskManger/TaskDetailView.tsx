@@ -145,7 +145,7 @@ export function TaskDetailView({ task }: TaskDetailViewProps) {
 
             {/* Description - MIT SCROLL LIMIT */}
             {task.description && (
-              <div className="max-h-32 overflow-y-auto">
+              <div className="max-h-32 overflow-y-auto custom-scrollbar">
                 <p className="text-sm text-muted-foreground">
                   {task.description}
                 </p>

@@ -8,6 +8,7 @@ import { TaskManagerHeader } from "../components/TaskManger/TaskManagerHeader";
 import { Card } from "@/components/ui/card";
 import { ALL_DOMAINS } from "../constants";
 import type { Task } from "../types";
+import { Plus } from "lucide-react";
 
 const MOCK_TASKS: Task[] = [
   {
@@ -288,10 +289,12 @@ function TaskManager() {
 
         {/* ============ BOX 2: TASKS (MITTE) ============ */}
         <Card className="rounded-none bg-muted/30 p-6">
-          <div className="grid grid-cols-2 gap-6 h-full">
+          <div className="grid grid-cols-2 gap-6">
             {/* DEADLINE TASKS */}
             <div>
-              <h2 className="text-xl font-semibold mb-4">Deadline Tasks</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold">Deadline Tasks</h2>
+              </div>
               <div className="space-y-3">
                 {deadlineTasks.map((task) => (
                   <TaskCard
@@ -307,7 +310,19 @@ function TaskManager() {
 
             {/* BACKLOG TASKS */}
             <div>
-              <h2 className="text-xl font-semibold mb-4">Backlog</h2>
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="text-xl font-semibold">Backlog</h2>
+                <button
+                  onClick={() => {
+                    // TODO: Open create task modal
+                    console.log("Create task");
+                  }}
+                  className="flex items-center gap-1.5 px-2 py-1 text-sm bg-primary text-primary-foreground rounded-md hover:opacity-90 font-medium whitespace-nowrap"
+                >
+                  <Plus className="w-3.5 h-3.5" />
+                  Create Task
+                </button>
+              </div>
               <div className="space-y-3">
                 {backlogTasks.map((task) => (
                   <TaskCard

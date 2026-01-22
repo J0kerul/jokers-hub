@@ -121,3 +121,22 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* Custom Scrollbar - NUR BAR SICHTBAR */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: #666666 !important;
+  border-radius: 10px !important;
+  opacity: 1 !important;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #888888 !important;
+}
