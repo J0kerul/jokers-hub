@@ -266,7 +266,18 @@ function TaskManager() {
 
           {/* Task Detail View Box */}
           <Card className="rounded-none p-6 flex-1">
-            <TaskDetailView task={selectedTask} />
+            <TaskDetailView
+              task={selectedTask}
+              onTaskUpdated={(updatedTask) => {
+                setTasks(
+                  tasks.map((t) => (t.id === updatedTask.id ? updatedTask : t)),
+                );
+              }}
+              onTaskDeleted={(taskId) => {
+                setTasks(tasks.filter((t) => t.id !== taskId));
+                setSelectedTaskId(null);
+              }}
+            />
           </Card>
 
           {/* Today's Schedule Box */}

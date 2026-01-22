@@ -12,9 +12,12 @@ import {
 import type { Task } from "@/types";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
+import { taskService } from "@/services/taskService";
 
 type TaskDetailViewProps = {
   task: Task | null;
+  onTaskUpdated: (task: Task) => void;
+  onTaskDeleted: (taskId: string) => void;
 };
 
 const PRIORITIES = ["low", "medium", "high"] as const;
@@ -30,7 +33,11 @@ const getPriorityStyle = (priority: "low" | "medium" | "high") => {
   }
 };
 
-export function TaskDetailView({ task }: TaskDetailViewProps) {
+export function TaskDetailView({
+  task,
+  onTaskUpdated,
+  onTaskDeleted,
+}: TaskDetailViewProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -72,24 +79,36 @@ export function TaskDetailView({ task }: TaskDetailViewProps) {
     setIsEditing(true);
   };
 
-  const handleUpdate = () => {
-    // TODO: Backend update logic
-    console.log("Update task:", {
-      id: task.id,
-      title: editTitle,
-      description: editDescription,
-      domain: editDomain,
-      priority: editPriority,
-      isBacklog: editIsBacklog,
-      deadline: editIsBacklog ? null : editDeadline,
-    });
-    setIsEditing(false);
+  const handleUpdate = async () => {
+    if (!editTitle.trim()) return;
+
+    try {
+      const updatedTask = await taskService.updateTask(task.id, {
+        title: editTitle,
+        description: editDescription || undefined,
+        domain: editDomain,
+        priority: editPriority,
+        isBacklog: editIsBacklog,
+        deadline: editIsBacklog ? undefined : editDeadline,
+      });
+
+      onTaskUpdated(updatedTask);
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Error updating task:", err);
+      alert("Failed to update task");
+    }
   };
 
-  const handleDelete = () => {
-    // TODO: Backend delete logic
-    console.log("Delete task:", task.id);
-    setShowDeleteConfirm(false);
+  const handleDelete = async () => {
+    try {
+      await taskService.deleteTask(task.id);
+      onTaskDeleted(task.id);
+      setShowDeleteConfirm(false);
+    } catch (err) {
+      console.error("Error deleting task:", err);
+      alert("Failed to delete task");
+    }
   };
 
   return (
@@ -120,12 +139,12 @@ export function TaskDetailView({ task }: TaskDetailViewProps) {
         )}
       </div>
 
-      {/* Content */}
+      {/* Content - ohne extra Card border */}
       <div className="space-y-4">
         {/* VIEW MODE */}
         {!isEditing ? (
           <>
-            {/* Title + Deadline/Backlog - same line */}
+            {/* Title + Deadline/Backlog - selbe Zeile */}
             <div className="flex items-start justify-between gap-4">
               <h3 className="text-base font-semibold flex-1">{task.title}</h3>
 
@@ -143,7 +162,7 @@ export function TaskDetailView({ task }: TaskDetailViewProps) {
               )}
             </div>
 
-            {/* Description */}
+            {/* Description - MIT SCROLL LIMIT */}
             {task.description && (
               <div className="max-h-32 overflow-y-auto custom-scrollbar">
                 <p className="text-sm text-muted-foreground">
@@ -181,7 +200,7 @@ export function TaskDetailView({ task }: TaskDetailViewProps) {
         ) : (
           /* EDIT MODE */
           <>
-            {/* Title */}
+            {/* Title - volle Breite */}
             <div>
               <input
                 type="text"
@@ -191,7 +210,7 @@ export function TaskDetailView({ task }: TaskDetailViewProps) {
               />
             </div>
 
-            {/* Backlog Toggle + Date Input - below the title */}
+            {/* Backlog Toggle + Date Input - unter dem Titel */}
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setEditIsBacklog(!editIsBacklog)}
@@ -272,7 +291,7 @@ export function TaskDetailView({ task }: TaskDetailViewProps) {
           </>
         )}
 
-        {/* Project/Uni Module */}
+        {/* Projekt/Uni Modul - nur in View Mode */}
         {!isEditing && task.projectId && (
           <div>
             <Badge variant="secondary" className="text-xs gap-1">

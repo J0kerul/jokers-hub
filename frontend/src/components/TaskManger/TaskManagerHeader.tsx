@@ -7,7 +7,7 @@ type TaskManagerHeaderProps = {
 
 export function TaskManagerHeader({ tasks }: TaskManagerHeaderProps) {
   // calculate tasks due today
-  const today = new Date("2026-01-22"); // Your mock date
+  const today = new Date();
   today.setHours(0, 0, 0, 0);
 
   const todaysTasks = tasks.filter((task) => {
