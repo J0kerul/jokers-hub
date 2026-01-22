@@ -1,11 +1,18 @@
 import { useState } from "react";
+import { useEffect } from "react";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
+import TaskManager from "./pages/TaskManager";
 
 function App() {
+  useEffect(() => {
+    // Dark Mode auf <html> setzen
+    document.documentElement.classList.add("dark");
+  }, []);
+
   return (
-    <div>
-      <h1>MyLifeOS</h1>
+    <div className="min-h-screen">
+      <TaskManager />
     </div>
   );
 }
