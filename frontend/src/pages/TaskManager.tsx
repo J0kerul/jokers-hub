@@ -2,6 +2,7 @@ import { useState } from "react";
 import { FilterSidebar } from "../components/TaskManger/FilterSidebar";
 import { TaskCard } from "../components/TaskManger/TaskCard";
 import { StatsPanel } from "../components/TaskManger/StatsPanel";
+import { TaskDetailView } from "../components/TaskManger/TaskDetailView";
 import { ALL_DOMAINS } from "../constants";
 import type { Task } from "../types";
 
@@ -263,7 +264,7 @@ function TaskManager() {
   };
 
   const selectedTask = selectedTaskId
-    ? tasks.find((t) => t.id === selectedTaskId)
+    ? tasks.find((t) => t.id === selectedTaskId) || null
     : null;
 
   return (
@@ -327,68 +328,7 @@ function TaskManager() {
           <StatsPanel stats={domainStats} />
 
           {/* Task Detail View */}
-          <div>
-            <h2 className="text-lg font-semibold mb-4">Task Details</h2>
-            {selectedTask ? (
-              <div className="space-y-4">
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Title
-                  </h3>
-                  <p className="text-base font-semibold">
-                    {selectedTask.title}
-                  </p>
-                </div>
-
-                {selectedTask.deadline && (
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500 mb-1">
-                      Deadline
-                    </h3>
-                    <p className="text-base">📅 {selectedTask.deadline}</p>
-                  </div>
-                )}
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Domain
-                  </h3>
-                  <p className="text-base capitalize">{selectedTask.domain}</p>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Priority
-                  </h3>
-                  <p className="text-base capitalize">
-                    {selectedTask.priority}
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Type
-                  </h3>
-                  <p className="text-base">
-                    {selectedTask.isBacklog ? "Backlog" : "Deadline Task"}
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-1">
-                    Status
-                  </h3>
-                  <p className="text-base">
-                    {selectedTask.completed ? "✅ Completed" : "⏳ Open"}
-                  </p>
-                </div>
-              </div>
-            ) : (
-              <p className="text-sm text-gray-500 italic">
-                Select a task to view details
-              </p>
-            )}
-          </div>
+          <TaskDetailView task={selectedTask} />
 
           {/* Today's Schedule Placeholder */}
           <div>
