@@ -1,0 +1,9 @@
+.git
+.gitignore
+README.md
+.env
+.env.local
+tmp/
+*.log
+node_modules
+.air.toml
