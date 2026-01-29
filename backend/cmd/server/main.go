@@ -46,7 +46,7 @@ func main() {
 	// Middleware
 	r.Use(middleware.RequestID)
 	r.Use(middleware.RealIP)
-	r.Use(middleware.Logger)
+	r.Use(skipHealthCheckLogger) // Custom logger that skips /health
 	r.Use(middleware.Recoverer)
 	r.Use(middleware.Timeout(60 * time.Second))
 
@@ -109,6 +109,20 @@ func main() {
 	}
 
 	log.Println("✓ Server stopped gracefully")
+}
+
+// skipHealthCheckLogger is a custom middleware that skips logging for /health endpoint
+func skipHealthCheckLogger(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		// Skip logging for health checks
+		if r.URL.Path == "/health" {
+			next.ServeHTTP(w, r)
+			return
+		}
+
+		// Use default Chi logger for everything else
+		middleware.Logger(next).ServeHTTP(w, r)
+	})
 }
 
 // connectDB establishes a connection pool to PostgreSQL
