@@ -20,11 +20,11 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags="-w -s" -o main ./cm
 # Production stage
 FROM alpine:latest
 
-RUN apk --no-cache add ca-certificates tzdata postgresql-client
+RUN apk --no-cache add ca-certificates tzdata
 
 WORKDIR /root/
 
-# Copy binary and migrate tool from builder
+# Copy binary, migrate tool, and migrations
 COPY --from=builder /app/main .
 COPY --from=builder /go/bin/migrate /usr/local/bin/migrate
 COPY --from=builder /app/migrations ./migrations
@@ -36,5 +36,5 @@ EXPOSE 8080
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD wget --no-verbose --tries=1 --spider http://localhost:8080/health || exit 1
 
-# Run migrations then start app
-CMD migrate -path ./migrations -database "${DATABASE_URL}" up && ./main
+# Run with shell
+CMD ["sh", "-c", "migrate -path ./migrations -database \"$DATABASE_URL\" up && ./main"]
