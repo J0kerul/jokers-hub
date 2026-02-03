@@ -1,0 +1,3 @@
+ALTER TABLE tasks DROP COLUMN IF EXISTS phase_id;
+
+ALTER TABLE tasks DROP CONSTRAINT IF EXISTS fk_tasks_project;

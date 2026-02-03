@@ -314,7 +314,7 @@ func RegisterRoutes(r chi.Router, handler *TaskHandler) {
 		// Create
 		r.Post("/", handler.createTask) // POST /tasks
 
-		// Read
+		// Get
 		r.Get("/", handler.getAllTasks)     // GET /tasks
 		r.Get("/{id}", handler.getTaskById) // GET /tasks/:id
 
