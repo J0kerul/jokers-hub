@@ -32,15 +32,18 @@ services:
         condition: service_healthy
     command: >
       sh -c "
-        psql -f /migrations/001_create_tasks_table.sql || echo 'Migration already applied';
-        echo 'Migrations complete!';
+        for f in /migrations/*.up.sql; do
+          echo \"Running migration: $$f\";
+          psql -f \"$$f\" || exit 1;
+        done;
+        echo 'All migrations complete!';
       "
     restart: "no"
 
   backend:
     build:
       context: ./backend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     container_name: jokers-hub-backend
     restart: always
     ports:
@@ -61,7 +64,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.prod
     container_name: jokers-hub-frontend
     restart: always
     volumes:

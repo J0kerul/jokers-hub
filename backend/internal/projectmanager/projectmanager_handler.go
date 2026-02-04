@@ -16,8 +16,8 @@ type CreateProjectRequest struct {
 	Description string      `json:"description" validate:"required"`
 	TechStack   []uuid.UUID `json:"tech_stack_ids" validate:"required"`
 	Status      Status      `json:"status" validate:"required"`
-	GithubUrl   *string     `json:"github_url"`
-	LiveUrl     *string     `json:"live_url"`
+	GithubUrl   *string     `json:"github_url,omitempty"`
+	LiveUrl     *string     `json:"live_url,omitempty"`
 }
 
 type ProjectResponse struct {
