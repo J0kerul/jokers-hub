@@ -14,6 +14,7 @@ import (
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/jackc/pgx/v5/pgxpool"
 
+	"github.com/J0kerul/jokers-hub/internal/projectmanager"
 	"github.com/J0kerul/jokers-hub/internal/task"
 )
 
@@ -59,7 +60,13 @@ func main() {
 	taskHandler := task.NewTaskHandler(taskService)
 	log.Println("✓ Task module initialized")
 
-	// 4. Setup Router
+	// 4. Initialize Project Manager Module
+	projectmanagerRepo := projectmanager.NewProjectManagerRepo(db)
+	projectmanagerService := projectmanager.NewProjectManagerService(projectmanagerRepo)
+	projectmanagerHandler := projectmanager.NewProjectManagerHandler(projectmanagerService)
+	log.Println("✓ Project Manager module initialized")
+
+	// 5. Setup Router
 	r := chi.NewRouter()
 
 	// Middleware
@@ -98,10 +105,10 @@ func main() {
 
 		// Future modules:
 		// event.RegisterRoutes(r, eventHandler)
-		// project.RegisterRoutes(r, projectHandler)
+		projectmanager.RegisterRoutes(r, projectmanagerHandler)
 	})
 
-	// 5. Start Server
+	// 6. Start Server
 	server := &http.Server{
 		Addr:         ":" + port,
 		Handler:      r,

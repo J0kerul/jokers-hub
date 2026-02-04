@@ -22,7 +22,7 @@ const (
 )
 
 type Project struct {
-	Projectid    uuid.UUID   `json:"project_id" db:"project_id"`
+	ProjectId    uuid.UUID   `json:"project_id" db:"project_id"`
 	Title        string      `json:"title" db:"title"`
 	Description  string      `json:"description" db:"description"`
 	Status       Status      `json:"status" db:"status"`

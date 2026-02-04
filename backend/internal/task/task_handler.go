@@ -88,7 +88,7 @@ func (h *TaskHandler) createTask(w http.ResponseWriter, r *http.Request) {
 	// 4. Call Service Layer
 	err := h.service.CreateTask(r.Context(), task)
 	if err != nil {
-		if isBusinessError(err) {
+		if isValidationError(err) {
 			utils.RespondWithBadRequest(w, err.Error())
 			return
 		}
@@ -167,7 +167,7 @@ func (h *TaskHandler) updateTask(w http.ResponseWriter, r *http.Request) {
 	// 6. Call Service Layer to Update
 	err = h.service.UpdateTask(r.Context(), task)
 	if err != nil {
-		if isBusinessError(err) {
+		if isValidationError(err) {
 			utils.RespondWithBadRequest(w, err.Error())
 			return
 		}
@@ -277,8 +277,8 @@ func (h *TaskHandler) toggleTaskStatus(w http.ResponseWriter, r *http.Request) {
 	utils.RespondWithJSON(w, http.StatusOK, response)
 }
 
-// isBusinessError checks if error is a validation/business logic error
-func isBusinessError(err error) bool {
+// isValidationError checks if error is a validation/business logic error
+func isValidationError(err error) bool {
 	switch err {
 	case errorutils.ErrMissingId,
 		errorutils.ErrTitleRequired,
